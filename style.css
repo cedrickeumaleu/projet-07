@@ -160,6 +160,12 @@ main{
 .dropdown-menuListe{
     padding-left: 0;
 }
+.dropdown-menuListe2{
+    padding-left: 0;
+}
+.dropdown-menuListe3{
+    padding-left: 0;
+}
 .dropdown-item{
     display: block;
     width: 100%;

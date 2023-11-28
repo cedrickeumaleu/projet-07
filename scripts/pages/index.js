@@ -14,6 +14,8 @@ async function init() {
   // Récupère les datas
   const { recipes } = await getRecettes();
   const listIngredient = await getListeIngredient();
+  const listAppareil = await getListAppareil();
+  const listUstensile = await getListUstensile();
   //resultat function affichage des menu
   displayData(recipes);
   //resultat de filtre dans la bar de recherche
@@ -23,6 +25,14 @@ async function init() {
   createIngredient(listIngredient);
   filterIngredient(listIngredient);
   selectIngredient(recipes);
+  //filtre appareils
+  createAppareil(listAppareil);
+  filterAppareil(listAppareil);
+  selectAppareil(recipes);
+  //filtre ustensile
+  createUtensile(listUstensile);
+  filterUstensile(listUstensile);
+  selectUstensile(recipes);
 }
 init();
 
@@ -135,6 +145,114 @@ function filterIngredient(ingredients) {
     });
 
     createIngredient(resulFilteredMenu);
+  });
+}
+
+//affichage et filtre les appareils
+//DOM appareil
+const resultAppareil = document.querySelector(".dropdown-menuListe2");
+const inputAppareil = document.getElementById("search2");
+
+//function pour afficher les appareils
+function createAppareil(appliance) {
+  resultAppareil.innerHTML = "";
+
+  appliance.forEach((appareil) => {
+    const listAppareil = document.createElement("li");
+    listAppareil.setAttribute("class", "dropdown-item");
+    listAppareil.innerHTML = `<li class="dropdown-item" >${appareil}</li> `;
+
+    resultAppareil.appendChild(listAppareil);
+  });
+}
+
+// cette function selectionne un appareil dans la liste
+// et revoie que les menus qui comporte cette dernière
+function selectAppareil(recipes) {
+  resultAppareil.addEventListener("click", (event) => {
+    const newrecipes = recipes.filter((recipe) => {
+      return recipe.appliance.includes(event.target.textContent);
+    });
+    displayData(newrecipes);
+  });
+}
+//function qui renvoie la liste des appareils
+//sans doublons
+async function getListAppareil() {
+  const { recipes } = await getRecettes();
+  const liste = [];
+
+  recipes.forEach((el) => {
+    el.appliance;
+    if (!liste.includes(el.appliance)) {
+      liste.push(el.appliance);
+    }
+  });
+  return liste;
+}
+
+// function qui filtre les valeurs taper dans l'input
+function filterAppareil(appliance) {
+  inputAppareil.addEventListener("input", (event) => {
+    const resulFilteredMenu = appliance.filter((appareil) => {
+      return appareil.toLowerCase().includes(event.target.value.toLowerCase());
+    });
+
+    createAppareil(resulFilteredMenu);
+  });
+}
+
+//affichage et filtre des ingrédients
+//DOM ingredient
+const resultUstensile = document.querySelector(".dropdown-menuListe3");
+const inputUstensile = document.getElementById("search3");
+
+//function pour afficher les ingrédient
+function createUtensile(ustensils) {
+  resultUstensile.innerHTML = "";
+
+  ustensils.forEach((ustensil) => {
+    const listUstensile = document.createElement("li");
+    listUstensile.setAttribute("class", "dropdown-item");
+    listUstensile.innerHTML = `<li class="dropdown-item" >${ustensil}</li> `;
+
+    resultUstensile.appendChild(listUstensile);
+  });
+}
+
+// cette function selectionne un ingredient dans la liste
+// et revoie que les menus qui comporte cette dernière
+function selectUstensile(recipes) {
+  resultUstensile.addEventListener("click", (event) => {
+    const newrecipes = recipes.filter((recipe) => {
+      return recipe.ustensils.includes(event.target.textContent);
+    });
+    displayData(newrecipes);
+  });
+}
+//function qui renvoie la liste des ustensils
+//sans doublons
+async function getListUstensile() {
+  const { recipes } = await getRecettes();
+  const liste = [];
+  recipes.map((el) => {
+    el.ustensils;
+
+    if (!liste.includes(el.ustensils)) {
+      liste.push(el.ustensils);
+    }
+  });
+  return liste;
+}
+
+// function qui filtre les valeurs taper dans l'input
+function filterUstensile(ustensils) {
+  inputUstensile.addEventListener("input", (event) => {
+    const resulFilteredMenu = ustensils.filter((ustensil) => {
+      return ustensil.includes(event.target.value);
+    });
+
+    createUtensile(resulFilteredMenu);
   });
 }
 
