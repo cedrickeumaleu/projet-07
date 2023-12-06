@@ -1,4 +1,5 @@
 import { recettesTemplate } from "../templates/recettes.js";
+let searchFilter = {};
 async function getRecettes() {
   const recipes = await fetch("data/recipes.json");
   if (recipes.ok === true) {
@@ -6,19 +7,19 @@ async function getRecettes() {
   }
   throw new error("erreur serveur");
 }
-
+const { recipes } = await getRecettes();
 async function init() {
   //réinitialisation de la bar de recherche
   const inputSearch = document.getElementById("search");
   inputSearch.value = "";
   // Récupère les datas
-  const { recipes } = await getRecettes();
   const listIngredient = await getListeIngredient();
   const listAppareil = await getListAppareil();
   const listUstensile = await getListUstensile();
   //resultat function affichage des menu
   displayData(recipes);
-  //resultat de filtre dans la bar de recherche
+  // affichageFilter(selectedIngredient);
+  //resultat de filtre dans la bar de recherche principale
   getTriRecette(recipes);
   // filterElements(recipes);
   //les functions filtre ingredient
@@ -40,6 +41,7 @@ init();
 const main = document.getElementById("main");
 const menuSection = document.querySelector(".restaurant-section");
 const blockSection = document.querySelector(".section-page");
+const contentSelect = document.querySelector(".content-select");
 //function d'affichage des recettes
 async function displayData(recipes) {
   blockSection.innerHTML = "";
@@ -103,21 +105,66 @@ function createIngredient(ingredients) {
   });
 }
 
+const selectResult = document.querySelector(".resultat-filtre-wrapper");
+
+async function affichageFilter(selectedIngredients) {
+  selectResult.innerHTML = "";
+
+  selectedIngredients.forEach((ingredient) => {
+    const spanIngredient = document.createElement("div");
+    spanIngredient.setAttribute("class", "resultat-filtre");
+    spanIngredient.innerHTML = `<div>${ingredient}</div>`;
+    selectResult.appendChild(spanIngredient);
+  });
+}
+
 // cette function selectionne un ingredient dans la liste
 // et revoie que les menus qui comporte cette dernière
+function addIngredientsToFilter(ingredient) {
+  if (!searchFilter.ingredients) searchFilter.ingredients = [ingredient];
+  else searchFilter.ingredients.push(ingredient);
+}
+
+function searchRecipes() {
+  return recipes.filter((recipe) => {
+    return searchFilter.ingredients.forEach((searchIngredient, index) => {
+      let ingredientExist = false;
+      recipe.ingredients.forEach((ingredient) => {
+        if (searchIngredient == ingredient.ingredient) {
+          ingredientExist = true;
+        }
+      });
+      if (!ingredientExist) {
+        return false;
+      }
+      if (searchFilter.ingredients.length - 1 == index) {
+        return true;
+      }
+    });
+  });
+}
+
 function selectIngredient(recipes) {
   resultIngredient.addEventListener("click", (event) => {
+    // console.log(ingredient);.push(event.target.textContent);
+    addIngredientsToFilter(event.target.textContent);
     const newrecipes = recipes.filter((recipe) => {
       return (
         // filtrer dans les ingredients
         recipe.ingredients
           .map((ingredient) => {
-            return ingredient.ingredient.includes(event.target.textContent);
+            return searchFilter.ingredients
+              .map((el) => {
+                return ingredient.ingredient.includes(el);
+              })
+              .includes(true);
           })
           .includes(true)
       );
     });
     displayData(newrecipes);
+    affichageFilter(searchFilter.ingredients);
+    console.log(searchRecipes());
   });
 }
 //function qui renvoie la liste des ingredients
@@ -168,11 +215,20 @@ function createAppareil(appliance) {
 
 // cette function selectionne un appareil dans la liste
 // et revoie que les menus qui comporte cette dernière
+
+function addAppareilToFilter(appareil) {
+  if (!searchFilter.appliance) searchFilter.appliance = [appareil];
+  else searchFilter.appliance.push(appareil);
+}
+
+const selcSection = document.querySelector("resultat-filtre");
 function selectAppareil(recipes) {
   resultAppareil.addEventListener("click", (event) => {
+    addAppareilToFilter(event.target.textContent);
     const newrecipes = recipes.filter((recipe) => {
       return recipe.appliance.includes(event.target.textContent);
     });
+
     displayData(newrecipes);
   });
 }
@@ -180,15 +236,13 @@ function selectAppareil(recipes) {
 //sans doublons
 async function getListAppareil() {
   const { recipes } = await getRecettes();
-  const liste = [];
+  const allAppareils = [];
 
-  recipes.forEach((el) => {
-    el.appliance;
-    if (!liste.includes(el.appliance)) {
-      liste.push(el.appliance);
-    }
-  });
-  return liste;
+  for (let i = 0; i < recipes.length; i++) {
+    let appareils = recipes[i].appliance;
+    allAppareils.push(appareils);
+  }
+  return allAppareils;
 }
 
 // function qui filtre les valeurs taper dans l'input
@@ -212,11 +266,13 @@ function createUtensile(ustensils) {
   resultUstensile.innerHTML = "";
 
   ustensils.forEach((ustensil) => {
-    const listUstensile = document.createElement("li");
-    listUstensile.setAttribute("class", "dropdown-item");
-    listUstensile.innerHTML = `<li class="dropdown-item" >${ustensil}</li> `;
+    ustensil.forEach((ustensile) => {
+      const listUstensile = document.createElement("li");
+      listUstensile.setAttribute("class", "dropdown-item");
+      listUstensile.innerHTML = `<li class="dropdown-item" >${ustensile}</li> `;
 
-    resultUstensile.appendChild(listUstensile);
+      resultUstensile.appendChild(listUstensile);
+    });
   });
 }
 
