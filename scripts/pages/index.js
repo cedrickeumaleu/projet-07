@@ -87,6 +87,10 @@ async function getTriRecette(recipes) {
   });
 }
 
+// affichage du nombre de recette
+const sectionRecette = document.querySelector(".filtre");
+const nomberOfRecette = document.querySelector(".nombre-plats");
+
 //affichage et filtre des ingrédients
 //DOM ingredient
 const resultIngredient = document.querySelector(".dropdown-menuListe");
@@ -105,18 +109,31 @@ function createIngredient(ingredients) {
   });
 }
 
+// DOM button filter
 const selectResult = document.querySelector(".resultat-filtre-wrapper");
 
-async function affichageFilter(selectedIngredients) {
+// const closedIngredient = document.createElement("i");
+// affichage des buttons filter ingredient
+async function affichageFilter() {
   selectResult.innerHTML = "";
-
-  selectedIngredients.forEach((ingredient) => {
+  const allFilter = Object.values(searchFilter).flat();
+  console.log(allFilter);
+  allFilter.forEach((filter) => {
     const spanIngredient = document.createElement("div");
+    // closedIngredient.setAttribute("class", "fa-solid fa-xmark");
     spanIngredient.setAttribute("class", "resultat-filtre");
-    spanIngredient.innerHTML = `<div>${ingredient}</div>`;
+    spanIngredient.innerHTML = `${filter}`;
+    // spanIngredient.appendChild(closedIngredient);
     selectResult.appendChild(spanIngredient);
   });
 }
+
+//suprimé une sélection
+// closedIngredient.addEventListener("click", (event) => {
+//   if (event.target) {
+//     spanIngredient.style.display = "none";
+//   }
+// });
 
 // cette function selectionne un ingredient dans la liste
 // et revoie que les menus qui comporte cette dernière
@@ -125,46 +142,74 @@ function addIngredientsToFilter(ingredient) {
   else searchFilter.ingredients.push(ingredient);
 }
 
-function searchRecipes() {
-  return recipes.filter((recipe) => {
-    return searchFilter.ingredients.forEach((searchIngredient, index) => {
-      let ingredientExist = false;
-      recipe.ingredients.forEach((ingredient) => {
-        if (searchIngredient == ingredient.ingredient) {
-          ingredientExist = true;
-        }
-      });
-      if (!ingredientExist) {
-        return false;
-      }
-      if (searchFilter.ingredients.length - 1 == index) {
-        return true;
-      }
-    });
-  });
+function addAppareilToFilter(appliance) {
+  if (!searchFilter.appliances) searchFilter.appliances = [appliance];
+  else searchFilter.appliances.push(appliance);
 }
+
+function addUstensilToFilter(ustensil) {
+  if (!searchFilter.ustensils) searchFilter.ustensils = [ustensil];
+  else searchFilter.ustensils.push(ustensil);
+}
+
+// function searchRecipes() {
+//   return recipes.filter((recipe) => {
+//     return searchFilter.ingredients.forEach((searchIngredient, index) => {
+//       let ingredientExist = false;
+//       recipe.ingredients.forEach((el) => {
+//         if (searchIngredient == el.ingredient) {
+//           ingredientExist = true;
+//         }
+//       });
+//       if (!ingredientExist) {
+//         return false;
+//       }
+//       if (searchFilter.ingredients.length - 1 == index) {
+//         return true;
+//       }
+//     });
+//   });
+// }
 
 function selectIngredient(recipes) {
   resultIngredient.addEventListener("click", (event) => {
     // console.log(ingredient);.push(event.target.textContent);
     addIngredientsToFilter(event.target.textContent);
     const newrecipes = recipes.filter((recipe) => {
-      return (
-        // filtrer dans les ingredients
-        recipe.ingredients
-          .map((ingredient) => {
-            return searchFilter.ingredients
-              .map((el) => {
-                return ingredient.ingredient.includes(el);
+      return searchFilter.appliances
+        ? searchFilter.appliances
+            .map((appareil) => {
+              return recipe.appliance.includes(appareil);
+            })
+            .includes(true)
+        : null ||
+            // filtrer dans les ingredients
+            recipe.ingredients
+              .map((ingredient) => {
+                return searchFilter.ingredients
+                  ? searchFilter.ingredients
+                      .map((el) => {
+                        return ingredient.ingredient.includes(el);
+                      })
+                      .includes(true)
+                  : null;
+              })
+              .includes(true) ||
+            recipe.ustensils
+              .map((ustensil) => {
+                return searchFilter.ustensils
+                  ? searchFilter.ustensils
+                      .map((el) => {
+                        return ustensil.includes(el);
+                      })
+                      .includes(true)
+                  : null;
               })
               .includes(true);
-          })
-          .includes(true)
-      );
     });
     displayData(newrecipes);
-    affichageFilter(searchFilter.ingredients);
-    console.log(searchRecipes());
+    affichageFilter();
+    // console.log(searchRecipes());
   });
 }
 //function qui renvoie la liste des ingredients
@@ -216,20 +261,46 @@ function createAppareil(appliance) {
 // cette function selectionne un appareil dans la liste
 // et revoie que les menus qui comporte cette dernière
 
-function addAppareilToFilter(appareil) {
-  if (!searchFilter.appliance) searchFilter.appliance = [appareil];
-  else searchFilter.appliance.push(appareil);
-}
-
 const selcSection = document.querySelector("resultat-filtre");
+
 function selectAppareil(recipes) {
   resultAppareil.addEventListener("click", (event) => {
     addAppareilToFilter(event.target.textContent);
     const newrecipes = recipes.filter((recipe) => {
-      return recipe.appliance.includes(event.target.textContent);
+      return searchFilter.appliances
+        ? searchFilter.appliances
+            .map((appareil) => {
+              return recipe.appliance.includes(appareil);
+            })
+            .includes(true)
+        : null ||
+            // filtrer dans les ingredients
+            recipe.ingredients
+              .map((ingredient) => {
+                return searchFilter.ingredients
+                  ? searchFilter.ingredients
+                      .map((el) => {
+                        return ingredient.ingredient.includes(el);
+                      })
+                      .includes(true)
+                  : null;
+              })
+              .includes(true) ||
+            recipe.ustensils
+              .map((ustensil) => {
+                return searchFilter.ustensils
+                  ? searchFilter.ustensils
+                      .map((el) => {
+                        return ustensil.includes(el);
+                      })
+                      .includes(true)
+                  : null;
+              })
+              .includes(true);
     });
 
     displayData(newrecipes);
+    affichageFilter();
   });
 }
 //function qui renvoie la liste des appareils
@@ -280,10 +351,41 @@ function createUtensile(ustensils) {
 // et revoie que les menus qui comporte cette dernière
 function selectUstensile(recipes) {
   resultUstensile.addEventListener("click", (event) => {
+    addUstensilToFilter(event.target.textContent);
     const newrecipes = recipes.filter((recipe) => {
-      return recipe.ustensils.includes(event.target.textContent);
+      return searchFilter.appliances
+        ? searchFilter.appliances
+            .map((appareil) => {
+              return recipe.appliance.includes(appareil);
+            })
+            .includes(true)
+        : null ||
+            // filtrer dans les ingredients
+            recipe.ingredients
+              .map((ingredient) => {
+                return searchFilter.ingredients
+                  ? searchFilter.ingredients
+                      .map((el) => {
+                        return ingredient.ingredient.includes(el);
+                      })
+                      .includes(true)
+                  : null;
+              })
+              .includes(true) ||
+            recipe.ustensils
+              .map((ustensil) => {
+                return searchFilter.ustensils
+                  ? searchFilter.ustensils
+                      .map((el) => {
+                        return ustensil.includes(el);
+                      })
+                      .includes(true)
+                  : null;
+              })
+              .includes(true);
     });
     displayData(newrecipes);
+    affichageFilter();
   });
 }
 //function qui renvoie la liste des ustensils

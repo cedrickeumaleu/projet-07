@@ -120,16 +120,19 @@ main{
 }
 
 .content-select .resultat-filtre{
-    padding: 15px 5px;
+    padding: 15px 10px;
     width: 195px;
     height: 56px;
     border-radius: 11px;
     background: #FFD15B ;
     border: none;
     margin: 10px;
-    cursor: pointer;
   border-bottom: none;
+  align-items: center;
 } 
+.resultat-filtre .fa-solid{
+    cursor: pointer;
+}
 .resultat-filtre-wrapper{
     display: flex;
     flex-direction: row;
