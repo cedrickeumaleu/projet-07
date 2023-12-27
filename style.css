@@ -42,7 +42,7 @@ header .section-search{
     position: absolute;
     display: flex;
     justify-content: center;
-    
+    align-items: center;
 }
 .section-search input{
     height: 72px;
@@ -53,14 +53,19 @@ header .section-search{
     padding-left: 70px;
     font-size: 20px;
 }
+.section-search .fa-solid{
+    z-index: 1;
+    font-size: 20px;
+    margin-left: 785px;
+    color: #7A7A7A;
+}
 /*button recherche*/
 .section-search .btn-search{
     width: 51px;
     height: 52px;
     background: #1B1B1B;
     border-radius: 10px;
-    position: absolute;
-    margin-top: 12px;
+    position: absolute; 
     margin-left: 882px;
     cursor: pointer;
 }
@@ -214,13 +219,16 @@ transform: rotate(180deg);
   width: 195px;
 }
 .dropdown-menuListe{
-    padding-left: 0;
+    padding-left: 3px;
+  padding-top: 30px;
 }
 .dropdown-menuListe2{
-    padding-left: 0;
+    padding-left: 3px;
+  padding-top: 30px;
 }
 .dropdown-menuListe3{
-    padding-left: 0;
+    padding-left: 3px;
+  padding-top: 30px;;
 }
 .dropdown-item{
     display: block;
@@ -247,22 +255,41 @@ transform: rotate(180deg);
   max-width: 450px;
   border-radius: 6px;
   margin-bottom: 8px;
+  position: absolute;
 }
+
+.input-control .closeBtn{
+    font-size: 20px;
+    right: 53px;
+    position: relative;
+  color: #c6c6c6;
+  
+}
+
 .input-control .fa-solid{
   width: 20px;
   position: relative;
   z-index: 1;
-  left: 160px;
+  left: 161px;
   color: #c6c6c6;
 }
-.input-control input{
-    width: 100%;
-    font-size: 18px;
+
+.input-control .fa-solid.fa-xmark{
+    width: 20px;
     position: relative;
-    right: 10px;
+    z-index: 1;
+    color: #c6c6c6;
+    left: -53px;
+}
+
+.input-control input{
+    width: 176px;
+    font-size: 16px;
+    position: relative;
+    right: 11px;
     outline: 0;
     border:1px solid #c6c6c6;
-    color: #000;   
+    color: #000;  
 }
 /**section présentation des articles**/
 .restaurant-section{
