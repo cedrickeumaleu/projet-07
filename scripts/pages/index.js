@@ -128,7 +128,6 @@ function createAppareil(appliance) {
 }
 
 //creation des listes d'ustensils pour effectué le trie
-
 function createUtensile(ustensils) {
   const resultUstensile = document.querySelector(".dropdown-menuListe3");
   resultUstensile.innerHTML = "";
@@ -141,7 +140,6 @@ function createUtensile(ustensils) {
 }
 
 // afficharge des recettes filtrées
-
 function affichageFilter() {
   const selectResult = document.querySelector(".resultat-filtre-wrapper");
   selectResult.innerHTML = "";
