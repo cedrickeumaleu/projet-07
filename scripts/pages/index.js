@@ -139,11 +139,13 @@ function createUtensile(ustensils) {
   });
 }
 
-// afficharge des recettes filtrées
+// afficharge des recettes filtrées en ajoutant ou en suppriment des nouveaux élements
 function affichageFilter() {
   const selectResult = document.querySelector(".resultat-filtre-wrapper");
   selectResult.innerHTML = "";
+  //récupère le tableau  contenant les valeurs des propriétés propres dans searchFilter
   const allFilter = Object.values(searchFilter).flat();
+  //supprime le dernier élément du tableau allFilter et retourne le
   allFilter.pop();
   allFilter.forEach((filter) => {
     const divIngredient = document.createElement("div");
@@ -156,7 +158,6 @@ function affichageFilter() {
     divIngredient.appendChild(closedIngredient);
     selectResult.appendChild(divIngredient);
     closedIngredient.addEventListener("click", function (e) {
-      console.log("test");
       const value = e.target.parentElement.firstChild.innerText;
 
       let index = searchFilter.ingredients.indexOf(value);
