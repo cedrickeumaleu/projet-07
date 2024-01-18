@@ -99,7 +99,7 @@ recipes.forEach((recipe) => {
 });
 totalRecettes.innerHTML = `${sommeRecettes} RECETTES`;
 
-// creation des listes d'ustensils pour effectué le trie
+// creation des listes d'ingrediens pour effectué le trie
 function createIngredient(ingredients) {
   const resultIngredient = document.querySelector(".dropdown-menuListe");
   resultIngredient.innerHTML = "";
