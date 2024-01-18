@@ -139,6 +139,7 @@ function createUtensile(ustensils) {
 function affichageFilter() {
   const selectResult = document.querySelector(".resultat-filtre-wrapper");
   selectResult.innerHTML = "";
+  //récupère le tableau  contenant les valeurs des propriétés propres dans searchFilter
   const allFilter = Object.values(searchFilter).flat();
   allFilter.pop();
   allFilter.forEach((filter) => {
